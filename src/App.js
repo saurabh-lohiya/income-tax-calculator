@@ -106,7 +106,7 @@ function App () {
       setGIncomeTax(0)
     }
   }
-
+  // hi
   function handleNetInput (e) {
     const NetInc = new NetIncome(e.target.value, slabs)
     if (NetInc.grossIncome > 400000) {

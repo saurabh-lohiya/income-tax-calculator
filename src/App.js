@@ -95,16 +95,27 @@ function App () {
     }
   }
 
-  function handleGrossInput (e) {
+ function handleGrossInput (e) {
     console.log(e.target.value)
-    setNetIncome(new GrossIncome(e.target.value, slabs).netIncome)
-    setGIncomeTax(new GrossIncome(e.target.value, slabs).incomeTax)
+    if (e.target.value > 400000) {
+      const GrossInc = new GrossIncome(e.target.value, slabs)
+      setNetIncome(GrossInc.netIncome)
+      setGIncomeTax(GrossInc.incomeTax)
+    } else {
+      setNetIncome(e.target.value)
+      setGIncomeTax(0)
+    }
   }
 
   function handleNetInput (e) {
-    console.log(e)
-    setGrossIncome(new NetIncome(e.target.value, slabs).grossIncome)
-    setNIncomeTax(new NetIncome(e.target.value, slabs).incomeTax)
+    const NetInc = new NetIncome(e.target.value, slabs)
+    if (NetInc.grossIncome > 400000) {
+      setGrossIncome(NetInc.grossIncome)
+      setNIncomeTax(NetInc.incomeTax)
+    } else {
+      setGrossIncome(e.target.value)
+      setNIncomeTax(0)
+    }
   }
   // console.log(new NetIncome(1000000, slabs).incomeTax)
 

@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import incomeTaxReducer from "./incomeTax";
+import taxRateReducer from "./taxRates";
 
 export default configureStore({
   reducer: {
-    incomeTaxRate: incomeTaxReducer
+    taxRate: taxRateReducer,
   }
 })

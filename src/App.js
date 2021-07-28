@@ -1,21 +1,21 @@
 import './App.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle, faPlusCircle } from '@fortawesome/fontawesome-free-solid'
+import { incrementA, incrementB, incrementC, incrementD, incrementE, decrementA, decrementB, decrementC, decrementD, decrementE } from './redux/incomeTax'
+import { useSelector, useDispatch } from 'react-redux'
 import React, { useState } from 'react'
 
-function App () {
-  const [taxRateA, setTaxRateA] = useState(0)
-  const [taxRateB, setTaxRateB] = useState(0.025)
-  const [taxRateC, setTaxRateC] = useState(0.10)
-  const [taxRateD, setTaxRateD] = useState(0.25)
-  const [taxRateE, setTaxRateE] = useState(0.30)
+function App() {
+
+  const { taxRateA, taxRateB, taxRateC, taxRateD, taxRateE } = useSelector(state => state.incomeTaxRate)
+  const dispatch = useDispatch()
   const [netIncome, setNetIncome] = useState()
   const [gIncomeTax, setGIncomeTax] = useState()
   const [nIncomeTax, setNIncomeTax] = useState()
   const [grossIncome, setGrossIncome] = useState()
 
   class Slabs {
-    constructor () {
+    constructor() {
       this.A = [0, 150000, taxRateA]
       this.B = [150001, 300000, taxRateB]
       this.C = [300001, 800000, taxRateC]
@@ -25,13 +25,13 @@ function App () {
   }
   const slabs = new Slabs()
   class GrossIncome {
-    constructor (income) {
+    constructor(income) {
       this.grossIncome = income
       this.incomeTax = this.calculateIncomeTax()
       this.netIncome = this.grossIncome - this.incomeTax
     }
 
-    calculateIncomeTax () {
+    calculateIncomeTax() {
       let incomeTax = 0
       const residualGrossIncome = this.grossIncome
       if (residualGrossIncome >= slabs.E[0]) {
@@ -51,13 +51,13 @@ function App () {
   }
 
   class NetIncome {
-    constructor (income, slabs) {
+    constructor(income, slabs) {
       this.netIncome = income
       this.grossIncome = this.calculateGrossIncome()
       this.incomeTax = this.grossIncome - this.netIncome
     }
 
-    calculateGrossIncome () {
+    calculateGrossIncome() {
       let grossIncome = 0
       let residualNetIncome = this.netIncome
       if (slabs.A[1] < residualNetIncome) {
@@ -95,7 +95,7 @@ function App () {
     }
   }
 
-  function handleGrossInput (e) {
+  function handleGrossInput(e) {
     console.log(e.target.value)
     if (e.target.value > 400000) {
       const GrossInc = new GrossIncome(e.target.value, slabs)
@@ -107,7 +107,7 @@ function App () {
     }
   }
   // hi
-  function handleNetInput (e) {
+  function handleNetInput(e) {
     const NetInc = new NetIncome(e.target.value, slabs)
     if (NetInc.grossIncome > 400000) {
       setGrossIncome(NetInc.grossIncome)
@@ -117,110 +117,47 @@ function App () {
       setNIncomeTax(0)
     }
   }
-  // console.log(new NetIncome(1000000, slabs).incomeTax)
 
-  function handleTaxRateA (e) {
-    // console.log(e.target.classList)
-
-    if (e.target.classList.contains('plus')) {
-      setTaxRateA(
-        prevTaxRateA => prevTaxRateA + 0.1
-      )
-    }
-    if (e.target.classList.contains('minus')) {
-      setTaxRateA(
-        prevTaxRateA => prevTaxRateA - 0.1
-      )
-    }
-  }
-  function handleTaxRateB (e) {
-    if (e.target.classList.contains('plus')) {
-      setTaxRateB(
-        prevTaxRateB => prevTaxRateB + 0.1
-      )
-    }
-    if (e.target.classList.contains('minus')) {
-      setTaxRateB(
-        prevTaxRateB => prevTaxRateB - 0.1
-      )
-    }
-  }
-  function handleTaxRateC (e) {
-    if (e.target.classList.contains('plus')) {
-      setTaxRateC(
-        prevTaxRateC => prevTaxRateC + 0.1
-      )
-    }
-    if (e.target.classList.contains('minus')) {
-      setTaxRateC(
-        prevTaxRateC => prevTaxRateC - 0.1
-      )
-    }
-  }
-  function handleTaxRateD (e) {
-    if (e.target.classList.contains('plus')) {
-      setTaxRateD(
-        prevTaxRateD => prevTaxRateD + 0.1
-      )
-    }
-    if (e.target.classList.contains('minus')) {
-      setTaxRateD(
-        prevTaxRateD => prevTaxRateD - 0.1
-      )
-    }
-  }
-  function handleTaxRateE (e) {
-    if (e.target.classList.contains('plus')) {
-      setTaxRateE(
-        prevTaxRateE => prevTaxRateE + 0.1
-      )
-    }
-    if (e.target.classList.contains('minus')) {
-      setTaxRateE(
-        prevTaxRateE => prevTaxRateE - 0.1
-      )
-    }
-  }
   return (
     <div className='App'>
       <h1>Income Tax Calculator</h1>
       <div className='slab'>
         <div className='row'>
           <div className='col'>
-            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={handleTaxRateA} />
-            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={handleTaxRateA} />
+            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={() => dispatch(incrementA())} />
+            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={() => dispatch(decrementA())} />
           </div>
           <div className='col'>{taxRateA}%</div>
           <div className='col'>0 - 1,50,000</div>
         </div>
         <div className='row'>
           <div className='col'>
-            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={handleTaxRateB} />
-            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={handleTaxRateB} />
+            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={() => dispatch(incrementB())} />
+            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={() => dispatch(decrementB())} />
           </div>
           <div className='col'>{taxRateB}%</div>
           <div className='col'>1,50,001 - 3,00,000</div>
         </div>
         <div className='row'>
           <div className='col'>
-            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={handleTaxRateC} />
-            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={handleTaxRateC} />
+            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={() => dispatch(incrementC())} />
+            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={() => dispatch(decrementC())} />
           </div>
           <div className='col'>{taxRateC}%</div>
           <div className='col'>3,00,001 - 8,00,000</div>
         </div>
         <div className='row'>
           <div className='col'>
-            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={handleTaxRateD} />
-            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={handleTaxRateD} />
+            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={() => dispatch(incrementD())} />
+            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={() => dispatch(decrementD())} />
           </div>
           <div className='col'>{taxRateD}%</div>
           <div className='col'>8,00,001 - 1,00,00,000</div>
         </div>
         <div className='row'>
           <div className='col'>
-            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={handleTaxRateE} />
-            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={handleTaxRateE} />
+            <FontAwesomeIcon icon={faPlusCircle} className='icon plus' onClick={() => dispatch(incrementE())} />
+            <FontAwesomeIcon icon={faMinusCircle} className='icon minus' onClick={() => dispatch(decrementE())} />
           </div>
           <div className='col'>{taxRateE}%</div>
           <div className='col'>1,00,00,000+</div>

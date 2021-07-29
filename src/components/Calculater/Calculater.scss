@@ -1,0 +1,17 @@
+.net,
+.gross {
+  flex: 1;
+}
+.income {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+  span {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    height: 25px;
+    min-width: 40px;
+    border: 2px solid black;
+  }
+}
